@@ -1,0 +1,91 @@
+spring:
+  application:
+    name: busy-flights-service
+  profiles:
+    active: localhost
+  main:
+    allow-bean-definition-overriding: true
+
+info:
+  component: Busy Flights Service
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+
+server:
+  port: 8080
+---
+spring:
+  profiles: localhost
+  cloud:
+    config:
+      uri: http://localhost:8888
+
+feign-clients:
+  crazy-air:
+    name: crazy-air
+    base-url: http://localhost:8762
+  tough-jet:
+    name: tough-jet
+    base-url: http://localhost:8762
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    enabled: false
+
+---
+spring:
+  profiles: stage
+  cloud:
+    config:
+      uri: https://stage-config-server:8888
+
+feign-clients:
+  crazy-air:
+    name: crazy-air
+    base-url: https://stage-edge-server:8762
+  tough-jet:
+    name: tough-jet
+    base-url: https://stage-edge-server:8762
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+  client:
+    service-url:
+      defaultZone: https://stage-discovery-server:8761/eureka/
+    enabled: false
+
+---
+spring:
+  profiles: prod
+  cloud:
+    config:
+      uri: https://prod-config-server:8888
+
+feign-clients:
+  crazy-air:
+    name: crazy-air
+    base-url: https://prod-edge-server:8762
+  tough-jet:
+    name: tough-jet
+    base-url: https://prod-edge-server:8762
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+  client:
+    service-url:
+      defaultZone: https://prod-discovery-server:8761/eureka/
+    enabled: false

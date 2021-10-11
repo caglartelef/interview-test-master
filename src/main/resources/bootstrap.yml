@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: localhost
+  application:
+    name: busy-flights-service
+
+---
+spring:
+  profiles: localhost
+  cloud:
+    config:
+      uri: http://localhost:8888
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+---
+spring:
+  profiles: stage
+  cloud:
+    config:
+      uri: https://stage-config-server:8888
+
+eureka:
+  client:
+    service-url:
+      defaultZone: https://stage-discovery-server:8761/eureka/
+
+---
+spring:
+  profiles: prod
+  cloud:
+    config:
+      uri: https://prod-config-server:8888
+
+eureka:
+  client:
+    service-url:
+      defaultZone: https://prod-discovery-server:8761/eureka/
